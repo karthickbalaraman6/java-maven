@@ -1,40 +1,49 @@
 pipeline {
-agent any
+  agent any
 
+  tools {
+    jdk 'JAVA_17'   // must match name in Manage Jenkins -> JDK installations
+    maven 'maven'   // must match name in Manage Jenkins -> Maven installations
+  }
 
-tools {
-maven 'MAVEN_HOME'
-jdk 'JAVA_HOME'
-}
+  stages {
+    stage('Checkout') {
+      steps {
+        git url: 'https://github.com/karthickbalaraman6/java-maven.git', credentialsId: 'github-creds'
+      }
+    }
 
+    stage('Build WAR') {
+      steps {
+        sh 'mvn -B clean package'
+      }
+    }
 
-stages {
-stage('Checkout') {
-steps {
-git 'https://github.com/karthickbalaraman6/java-maven.git'
-}
-}
+    stage('Build Docker Image') {
+      steps {
+        sh 'docker build -t loginapp .'
+      }
+    }
 
+    stage('Run Container') {
+      steps {
+        sh '''
+          docker ps -q --filter name=loginapp | grep -q . && docker stop loginapp && docker rm loginapp || true
+          docker run -d -p 8080:8080 --name loginapp loginapp
+        '''
+      }
+    }
+  }
 
-stage('Build WAR') {
-steps {
-sh 'mvn clean package'
-}
-}
-
-
-stage('Build Docker Image') {
-steps {
-sh 'docker build -t loginapp .'
-}
-}
-
-
-stage('Run Docker Container') {
-steps {
-sh 'docker ps -q --filter name=loginapp && docker stop loginapp || true'
-sh 'docker run -d -p 8080:8080 --name loginapp loginapp'
-}
-}
-}
+  post {
+    always {
+      archiveArtifacts artifacts: 'target/*.war', onlyIfSuccessful: false
+    }
+    success {
+      echo 'Deployment succeeded — open http://<EC2-IP>:8080/loginapp/login.html'
+    }
+    failure {
+      echo 'Pipeline failed — check console output'
+    }
+  }
 }

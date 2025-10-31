@@ -1,6 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                              http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
@@ -9,8 +9,7 @@
   <version>1.0-SNAPSHOT</version>
   <packaging>war</packaging>
 
-  <name>LoginApp</name>
-  <description>Simple Java Maven login web app</description>
+  <name>loginapp</name>
 
   <properties>
     <maven.compiler.source>17</maven.compiler.source>
@@ -18,7 +17,7 @@
   </properties>
 
   <dependencies>
-    <!-- ✅ Servlet API dependency for Tomcat 9 (javax namespace) -->
+    <!-- Servlet API (provided by Tomcat at runtime) -->
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
@@ -30,7 +29,6 @@
   <build>
     <finalName>loginapp</finalName>
     <plugins>
-      <!-- Maven compiler plugin -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -41,7 +39,6 @@
         </configuration>
       </plugin>
 
-      <!-- Maven war plugin -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
