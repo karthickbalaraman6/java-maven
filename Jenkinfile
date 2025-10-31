@@ -29,7 +29,7 @@ pipeline {
       steps {
         sh '''
           docker ps -q --filter name=login-apps | grep -q . && docker stop login-apps && docker rm login-apps || true
-          docker run -d -p 3000 --name login-apps login-apps
+          docker run -d -p 8081 --name login-apps login-apps
         '''
       }
     }

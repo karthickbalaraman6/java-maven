@@ -7,5 +7,5 @@ RUN rm -rf /usr/local/tomcat/webapps/*
 # Copy WAR produced by Maven
 COPY target/loginapp.war /usr/local/tomcat/webapps/loginapp.war
 
-EXPOSE 3000
+EXPOSE 8081
 CMD ["catalina.sh", "run"]
